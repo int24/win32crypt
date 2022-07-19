@@ -1,2 +1,7 @@
-.vscode/
-build/
+build
+dist
+
+.eslintrc.yml
+.prettierignore
+.prettierrc.yml
+README.md

@@ -4,16 +4,17 @@
 #include <dpapi.h>
 #include <functional>
 
-v8::Local<v8::String> CreateUtf8String(v8::Isolate* isolate, char* strData)
+v8::Local<v8::String> CreateUtf8String(v8::Isolate *isolate, char *strData)
 {
 	return v8::String::NewFromUtf8(isolate, strData, v8::NewStringType::kNormal).ToLocalChecked();
 }
 
 void ProtectDataCommon(bool protect, Nan::NAN_METHOD_ARGS_TYPE info)
 {
-	v8::Isolate* isolate = info.GetIsolate();
+	v8::Isolate *isolate = info.GetIsolate();
 
-	if (info.Length() != 3) {
+	if (info.Length() != 3)
+	{
 		isolate->ThrowException(v8::Exception::RangeError(
 			CreateUtf8String(isolate, "3 arguments are required")));
 	}
@@ -54,7 +55,7 @@ void ProtectDataCommon(bool protect, Nan::NAN_METHOD_ARGS_TYPE info)
 	entropyBlob.pbData = nullptr;
 	if (!info[1]->IsNull())
 	{
-		entropyBlob.pbData = reinterpret_cast<BYTE*>(node::Buffer::Data(info[1]));
+		entropyBlob.pbData = reinterpret_cast<BYTE *>(node::Buffer::Data(info[1]));
 		entropyBlob.cbData = node::Buffer::Length(info[1]);
 	}
 
@@ -62,7 +63,7 @@ void ProtectDataCommon(bool protect, Nan::NAN_METHOD_ARGS_TYPE info)
 	DATA_BLOB dataOut;
 
 	// initialize input data
-	dataIn.pbData = reinterpret_cast<BYTE*>(buffer);
+	dataIn.pbData = reinterpret_cast<BYTE *>(buffer);
 	dataIn.cbData = len;
 
 	bool success = false;
@@ -76,7 +77,7 @@ void ProtectDataCommon(bool protect, Nan::NAN_METHOD_ARGS_TYPE info)
 			entropyBlob.pbData ? &entropyBlob : nullptr,
 			nullptr, // reserved
 			nullptr, // pass null for the prompt structure
-			flags, // dwFlags
+			flags,	 // dwFlags
 			&dataOut);
 	}
 	else
@@ -87,7 +88,7 @@ void ProtectDataCommon(bool protect, Nan::NAN_METHOD_ARGS_TYPE info)
 			entropyBlob.pbData ? &entropyBlob : nullptr,
 			nullptr, // reserved
 			nullptr, // pass null for the prompt structure
-			flags, // dwFlags
+			flags,	 // dwFlags
 			&dataOut);
 	}
 
@@ -101,13 +102,13 @@ void ProtectDataCommon(bool protect, Nan::NAN_METHOD_ARGS_TYPE info)
 	}
 
 	// Copy and free the buffer
-	auto returnBuffer = Nan::CopyBuffer(reinterpret_cast<const char*>(dataOut.pbData), dataOut.cbData).ToLocalChecked();
+	auto returnBuffer = Nan::CopyBuffer(reinterpret_cast<const char *>(dataOut.pbData), dataOut.cbData).ToLocalChecked();
 	LocalFree(dataOut.pbData);
 
 	info.GetReturnValue().Set(returnBuffer);
 }
 
-// public unsafe static byte[] Protect(byte[] userData, byte[] optionalEntropy, DataProtectionScope scope) 
+// public unsafe static byte[] Protect(byte[] userData, byte[] optionalEntropy, DataProtectionScope scope)
 NAN_METHOD(protectData)
 {
 	ProtectDataCommon(true, info);
