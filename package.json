@@ -20,6 +20,9 @@
         "dpapi",
         "encrypt"
     ],
+    "os": [
+        "win32"
+    ],
     "dependencies": {
         "bindings": "1.5.0",
         "nan": "2.13.2"
