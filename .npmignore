@@ -1,5 +1,4 @@
 build
-dist
 
 .eslintrc.yml
 .prettierignore
