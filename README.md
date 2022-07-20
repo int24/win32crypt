@@ -6,13 +6,13 @@ Based on original work from [bradhugh/node-dpapi](https://github.com/bradhugh/no
 ```typescript
 function protectData(
     data: Uint8Array,
-    entropy: Uint8Array,
+    entropy: Uint8Array | null,
     scope: "CurrentUser" | "LocalMachine"
 ): Uint8Array;
 
 function unprotectData(
     data: Uint8Array,
-    entropy: Uint8Array,
+    entropy: Uint8Array | null,
     scope: "CurrentUser" | "LocalMachine"
 ): Uint8Array;
 ```
