@@ -1,51 +1,38 @@
 # win32crypt
-Windows Data Protection API in Node.js.
+Windows Data Protection API for Node.js.
 Based on original work from [bradhugh/node-dpapi](https://github.com/bradhugh/node-dpapi).
 
 ## API:
 ```typescript
 function protectData(
-    userData: Uint8Array,
-    optionalEntropy: Uint8Array,
+    data: Uint8Array,
+    entropy: Uint8Array,
     scope: "CurrentUser" | "LocalMachine"
 ): Uint8Array;
 
 function unprotectData(
-    encryptedData: Uint8Array,
-    optionalEntropy: Uint8Array,
+    data: Uint8Array,
+    entropy: Uint8Array,
     scope: "CurrentUser" | "LocalMachine"
 ): Uint8Array;
 ```
 
 ## Example:
 ```javascript
-import win32crypt from 'win32crypt';
+import { protectData, unprotectData } from 'win32crypt';
 
 const context = 'CurrentUser'
 
-const encryptedBuffer = win32crypt.protectData(
-    decryptedBuffer,
-    null,
-    context
-)
-const encryptedBufferWithEntropy = win32crypt.protectData(
-    decryptedBuffer,
-    entropyBuffer,
-    context
-)
+const decrypted = Buffer.from('test data', 'utf-8')
+const entropy = Buffer.from('entropy', 'utf-8')
+
+const encrypted = protectData(decrypted, null, context)
+const encryptedWithEntropy = protectData(decrypted, entropy, context)
 
 console.log(
-    `(${context}) Decrypted: ${win32crypt.unprotectData(
-        encryptedBuffer,
-        null,
-        context
-    )}`
+    `(${context}) Decrypted: ${unprotectData(encrypted, null, context)}`
 )
 console.log(
-    `(${context}) Decrypted with entropy: ${win32crypt.unprotectData(
-        encryptedBufferWithEntropy,
-        entropyBuffer,
-        context
-    )}`
+    `(${context}) Decrypted with entropy: ${unprotectData(encryptedWithEntropy, entropy, context)}`
 )
 ```
